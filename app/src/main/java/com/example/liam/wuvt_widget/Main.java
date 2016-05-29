@@ -12,7 +12,7 @@ public class Main extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds); //what is super?
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
         for(int i=0; i<appWidgetIds.length; i++){ //for all instances of the Widget
             int appWidgetId = appWidgetIds[i];
 
