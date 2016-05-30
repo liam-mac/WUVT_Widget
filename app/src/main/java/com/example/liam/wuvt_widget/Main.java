@@ -6,7 +6,19 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.widget.RemoteViews;
+
+
+
+import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
+import android.os.Environment;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 
 public class Main extends AppWidgetProvider {
     @Override
@@ -25,6 +37,33 @@ public class Main extends AppWidgetProvider {
 
             //Update the app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
+
+            //Save the list of songs to look at later
+
+            String new_songs = "";
+            try{
+            org.jsoup.nodes.Document doc = org.jsoup.Jsoup.connect("https://www.wuvt.vt.edu/last15").get(); //sends GET request to example.com
+                org.jsoup.nodes.Element song_table = doc.getElementById("last15tracks");
+                org.jsoup.select.Elements table_body = song_table.getElementsByTag("tbody");
+                new_songs = table_body.html(); //gets inner html of the body
+            }
+            catch (java.io.IOException e) {
+            e.printStackTrace();
+            }
+
+            File file;
+            FileOutputStream outputStream;
+            try {
+                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "WUVT_songs.html"); //Saves html file to DOCUMENTS folder on the phone
+
+                outputStream = new FileOutputStream(file);
+                outputStream.write(new_songs.getBytes()); //or content.string().getBytes() to string-i-fy first since getyBytes() takes a string as input
+                outputStream.close();
+            } catch (IOException e) { //if there's an error
+                e.printStackTrace();
+            }
+
+
         }
     }
 }
